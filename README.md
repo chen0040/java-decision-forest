@@ -11,6 +11,16 @@ Package implements decision tree and ensemble methods
 
 # Install 
 
+Add the following dependency to your POM file:
+
+```xml
+<dependency>
+  <groupId>com.github.chen0040</groupId>
+  <artifactId>java-decision-forest</artifactId>
+  <version>1.0.1</version>
+</dependency>
+```
+
 # Usage
 
 ### Classification
@@ -44,7 +54,7 @@ for(int i=0; i < dataFrame.rowCount(); ++i){
 }
 dataFrame.lock();
 
-classifier = new ID3();
+ID3 classifier = new ID3();
 classifier.fit(dataFrame);
 
 for(int i = 0; i < dataFrame.rowCount(); ++i){
@@ -102,4 +112,6 @@ for(int i = 0; i < learnedData.rowCount(); ++i){
  evaluator.evaluate(actual, predicted);
  logger.info("predicted: {}\texpected: {}", predicted, actual);
 }
+
+logger.info("summary: {}", evaluator.getSummary());
 ```
