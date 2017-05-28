@@ -18,9 +18,9 @@ public class ID3TreeNode implements Cloneable {
     private int rowCount;
     private int splitAttributeIndex;
     private String attributeValue;
-    private ArrayList<ID3TreeNode> childNodes;
+    private final List<ID3TreeNode> childNodes = new ArrayList<>();
     private String classLabel;
-    private List<String> columns = new ArrayList<>();
+    private final List<String> columns = new ArrayList<>();
 
     public void copy(ID3TreeNode rhs){
         rowCount = rhs.rowCount;
@@ -42,11 +42,10 @@ public class ID3TreeNode implements Cloneable {
     }
 
     public ID3TreeNode(){
-        childNodes = new ArrayList<ID3TreeNode>();
+
     }
 
     public ID3TreeNode(DataFrame batch, Random random, int height, int maxHeight, List<String> columns){
-        childNodes = new ArrayList<>();
         this.columns.addAll(columns);
 
         rowCount = batch.rowCount();
@@ -185,7 +184,7 @@ public class ID3TreeNode implements Cloneable {
     }
 
     public String predict(DataRow row){
-        if(childNodes != null){
+        if(!childNodes.isEmpty()){
             String value = this.columns.get(splitAttributeIndex);
 
             for(ID3TreeNode child : childNodes){
@@ -200,7 +199,7 @@ public class ID3TreeNode implements Cloneable {
 
 
     protected double pathLength(DataRow row){
-        if(childNodes!=null){
+        if(!childNodes.isEmpty()){
             String value = columns.get(splitAttributeIndex);
             for(ID3TreeNode child : childNodes){
                 if(child.attributeValue.equals(value)){
