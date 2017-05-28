@@ -150,7 +150,10 @@ public class ID3TreeNode implements Cloneable {
             batches[T.indexOf(attribute_value)].addRow(row);
         }
 
+
         for(int i=0; i < batches.length; ++i){
+            batches[i].lock();
+
             childNodes.add(new ID3TreeNode(batches[i], random, height+1, maxHeight, columns));
             childNodes.get(i).attributeValue = T.get(i);
         }
