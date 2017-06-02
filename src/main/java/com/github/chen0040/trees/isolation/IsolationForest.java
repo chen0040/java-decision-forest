@@ -19,7 +19,7 @@ import java.util.Random;
  */
 @Getter
 @Setter
-public class IsolationForest implements Cloneable {
+public class IsolationForest {
 
     private double threshold = 0.5;
     private int treeCount = 100;
@@ -34,30 +34,6 @@ public class IsolationForest implements Cloneable {
     private int rowCount;
 
 
-
-
-    public void copy(IsolationForest rhs2) throws CloneNotSupportedException {
-
-        rowCount = rhs2.rowCount;
-
-        trees = null;
-        if(rhs2.trees != null) {
-
-            trees = new ArrayList<>();
-
-            for (int i = 0; i < rhs2.trees.size(); ++i) {
-                trees.add((IFTreeNode)rhs2.trees.get(i).clone());
-            }
-        }
-    }
-
-    @Override
-    public Object clone() throws CloneNotSupportedException {
-        IsolationForest clone = (IsolationForest)super.clone();
-        clone.copy(this);
-
-        return clone;
-    }
 
     public IsolationForest(){
 

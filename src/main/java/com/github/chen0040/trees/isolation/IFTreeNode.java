@@ -13,40 +13,12 @@ import java.util.UUID;
 /**
  * Created by xschen on 17/8/15.
  */
-public class IFTreeNode implements Cloneable {
+public class IFTreeNode {
     private int rowCount;
     private int featureIndex;
     private double splitPoint;
     private List<IFTreeNode> childNodes;
     private String nodeId;
-
-    public void copy(IFTreeNode rhs) throws CloneNotSupportedException {
-        rowCount = rhs.rowCount;
-        featureIndex = rhs.featureIndex;
-        splitPoint = rhs.splitPoint;
-        nodeId = rhs.nodeId;
-
-        childNodes =  null;
-        if(rhs.childNodes != null){
-            childNodes = new ArrayList<IFTreeNode>();
-            for(int i=0; i < rhs.childNodes.size(); ++i){
-                childNodes.add((IFTreeNode)rhs.childNodes.get(i).clone());
-            }
-        }
-    }
-
-    @Override
-    public Object clone() throws CloneNotSupportedException {
-        IFTreeNode clone = (IFTreeNode)super.clone();
-        clone.copy(this);
-        
-        return clone;
-    }
-
-    public IFTreeNode(){
-        childNodes = new ArrayList<>();
-        nodeId = UUID.randomUUID().toString();
-    }
 
     private static double epsilon(){
         return 0.00000000001;

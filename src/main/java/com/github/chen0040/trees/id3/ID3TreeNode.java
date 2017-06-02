@@ -11,7 +11,7 @@ import java.util.*;
 /**
  * Created by xschen on 17/8/15.
  */
-public class ID3TreeNode implements Cloneable {
+public class ID3TreeNode {
     private int rowCount;
     private int splitAttributeIndex;
     private String attributeValue;
@@ -19,24 +19,6 @@ public class ID3TreeNode implements Cloneable {
     private String classLabel;
     private final List<String> columns = new ArrayList<>();
 
-    public void copy(ID3TreeNode rhs) throws CloneNotSupportedException {
-        rowCount = rhs.rowCount;
-        splitAttributeIndex = rhs.splitAttributeIndex;
-        attributeValue = rhs.attributeValue;
-        childNodes.clear();
-        for(int i=0; i < rhs.childNodes.size(); ++i){
-            childNodes.add((ID3TreeNode)rhs.childNodes.get(i).clone());
-        }
-        classLabel = rhs.classLabel;
-    }
-
-    @Override
-    public Object clone() throws CloneNotSupportedException {
-        ID3TreeNode clone = (ID3TreeNode)super.clone();
-        clone.copy(this);
-
-        return clone;
-    }
 
     public ID3TreeNode(){
 

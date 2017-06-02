@@ -16,25 +16,11 @@ import java.util.Random;
  */
 @Getter
 @Setter
-public class ID3 implements Cloneable {
+public class ID3 {
     private static Random rand = new Random();
     private KMeansDiscretizer discretizer=new KMeansDiscretizer();
     private ID3TreeNode tree;
     private int maxHeight = 1000;
-
-    public void copy(ID3 rhs2) throws CloneNotSupportedException {
-        tree = rhs2.tree==null ? null : (ID3TreeNode)rhs2.tree.clone();
-        maxHeight = rhs2.maxHeight;
-        discretizer = rhs2.discretizer == null ? null : rhs2.discretizer.makeCopy();
-    }
-
-    @Override
-    public Object clone() throws CloneNotSupportedException {
-        ID3 clone = (ID3)super.clone();
-        clone.copy(this);
-
-        return clone;
-    }
 
     public ID3(){
 
