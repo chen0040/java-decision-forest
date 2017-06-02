@@ -5,10 +5,7 @@ import com.github.chen0040.data.frame.DataFrame;
 import com.github.chen0040.data.frame.DataRow;
 import com.github.chen0040.data.utils.CountRepository;
 
-import java.util.ArrayList;
-import java.util.HashMap;
-import java.util.List;
-import java.util.Random;
+import java.util.*;
 
 
 /**
@@ -22,7 +19,7 @@ public class ID3TreeNode implements Cloneable {
     private String classLabel;
     private final List<String> columns = new ArrayList<>();
 
-    public void copy(ID3TreeNode rhs){
+    public void copy(ID3TreeNode rhs) throws CloneNotSupportedException {
         rowCount = rhs.rowCount;
         splitAttributeIndex = rhs.splitAttributeIndex;
         attributeValue = rhs.attributeValue;
@@ -34,8 +31,8 @@ public class ID3TreeNode implements Cloneable {
     }
 
     @Override
-    public Object clone(){
-        ID3TreeNode clone = new ID3TreeNode();
+    public Object clone() throws CloneNotSupportedException {
+        ID3TreeNode clone = (ID3TreeNode)super.clone();
         clone.copy(this);
 
         return clone;
@@ -76,7 +73,7 @@ public class ID3TreeNode implements Cloneable {
             String classEventName = "ClassLabel="+label;
 
             for(int j=0; j < n; ++j){
-                String category_value = columns.get(j);
+                String category_value = columns.get(j) + "=" + tuple.getCategoricalCell(columns.get(j));
                 counts[j].addSupportCount(category_value, classEventName);
                 counts[j].addSupportCount(category_value);
                 counts[j].addSupportCount();
@@ -99,7 +96,7 @@ public class ID3TreeNode implements Cloneable {
 
         splitAttributeIndex =  -1;
 
-        HashMap<Integer, Double> candidates = new HashMap<Integer, Double>();
+        Map<Integer, Double> candidates = new HashMap<>();
         for(int i = 0; i < n; ++i){
             List<String> T = counts[i].getSubEventNames();
             double entropy_reduced = 0;
@@ -115,6 +112,7 @@ public class ID3TreeNode implements Cloneable {
                 }
                 entropy_reduced += p_t * entropy_t;
             }
+
             double information_gain = entropy_S - entropy_reduced;
 
             if(information_gain > 0){
@@ -145,7 +143,8 @@ public class ID3TreeNode implements Cloneable {
 
         for(int i=0; i < rowCount; ++i){
             DataRow row = batch.row(i);
-            String attribute_value = columns.get(splitAttributeIndex);
+            int j = splitAttributeIndex;
+            String attribute_value = columns.get(j) + "=" + row.getCategoricalCell(columns.get(j));
             batches[T.indexOf(attribute_value)].addRow(row);
         }
 
@@ -185,7 +184,8 @@ public class ID3TreeNode implements Cloneable {
 
     public String predict(DataRow row){
         if(!childNodes.isEmpty()){
-            String value = this.columns.get(splitAttributeIndex);
+            int j = splitAttributeIndex;
+            String value = columns.get(j) + "=" + row.getCategoricalCell(columns.get(j));
 
             for(ID3TreeNode child : childNodes){
 

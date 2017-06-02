@@ -16,13 +16,13 @@ import java.util.Random;
  */
 @Getter
 @Setter
-public class ID3 {
+public class ID3 implements Cloneable {
     private static Random rand = new Random();
     private KMeansDiscretizer discretizer=new KMeansDiscretizer();
     private ID3TreeNode tree;
     private int maxHeight = 1000;
 
-    public void copy(ID3 rhs2){
+    public void copy(ID3 rhs2) throws CloneNotSupportedException {
         tree = rhs2.tree==null ? null : (ID3TreeNode)rhs2.tree.clone();
         maxHeight = rhs2.maxHeight;
         discretizer = rhs2.discretizer == null ? null : rhs2.discretizer.makeCopy();
@@ -45,15 +45,9 @@ public class ID3 {
         return tree.predict(tuple);
     }
 
-    protected boolean isValidTrainingSample(DataRow tuple){
-        return !tuple.getCategoricalTargetColumnNames().isEmpty();
-    }
-
     public void fit(DataFrame batch) {
 
         batch = discretizer.fitAndTransform(batch);
-
-        //System.out.println(batch);
 
         List<String> columns = batch.row(0).getCategoricalColumnNames();
         tree = new ID3TreeNode(batch, rand, 0, maxHeight, columns);
