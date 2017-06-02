@@ -90,39 +90,7 @@ public class IFTreeNode {
         if(n <= 1.0) return 0;
         return 2 * (Math.log(n - 1) + 0.5772156649) - (2 * (n - 1) / n);
     }
-
-    public int getTupleCount() {
-        return rowCount;
-    }
-
-    public void setTupleCount(int rowCount) {
-        this.rowCount = rowCount;
-    }
-
-    public int getFeatureIndex() {
-        return featureIndex;
-    }
-
-    public void setFeatureIndex(int featureIndex) {
-        this.featureIndex = featureIndex;
-    }
-
-    public double getSplitPoint() {
-        return splitPoint;
-    }
-
-    public void setSplitPoint(double splitPoint) {
-        this.splitPoint = splitPoint;
-    }
-
-    public List<IFTreeNode> getChildNodes() {
-        return childNodes;
-    }
-
-    public void setChildNodes(ArrayList<IFTreeNode> childNodes) {
-        this.childNodes = childNodes;
-    }
-
+    
     protected double pathLength(DataRow tuple){
         if(childNodes==null){
             return heuristicCost(rowCount);
