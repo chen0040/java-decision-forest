@@ -8,6 +8,7 @@ Package implements decision tree and ensemble methods
 
 * ID3 Decision Tree with both numerical and categorical inputs 
 * Isolation Forest for Anomaly Detection
+* Tree Ensembles such as Bagging and Adaboost
 
 # Install 
 
@@ -17,7 +18,7 @@ Add the following dependency to your POM file:
 <dependency>
   <groupId>com.github.chen0040</groupId>
   <artifactId>java-decision-forest</artifactId>
-  <version>1.0.2</version>
+  <version>1.0.3</version>
 </dependency>
 ```
 
@@ -65,7 +66,7 @@ for(int i = 0; i < dataFrame.rowCount(); ++i){
 
 ```
 
-### Classification via Ensemble
+### Classification via Ensemble (Bagging)
 
 To create and train a Bagging ensemble classifier:
 
@@ -106,6 +107,43 @@ for(int i = 0; i < dataFrame.rowCount(); ++i){
 }
 
 ```
+
+### Classification via Ensemble (AdaBoost)
+
+```java
+InputStream irisStream = new FileInputStream("iris.data");
+DataFrame irisData = DataQuery.csv(",")
+      .from(irisStream)
+      .selectColumn(0).asNumeric().asInput("Sepal Length")
+      .selectColumn(1).asNumeric().asInput("Sepal Width")
+      .selectColumn(2).asNumeric().asInput("Petal Length")
+      .selectColumn(3).asNumeric().asInput("Petal Width")
+      .selectColumn(4).asCategory().asOutput("Iris Type")
+      .build();
+
+TupleTwo<DataFrame, DataFrame> parts = irisData.shuffle().split(0.9);
+
+DataFrame trainingData = parts._1();
+DataFrame crossValidationData = parts._2();
+
+System.out.println(crossValidationData.head(10));
+
+MultiClassAdaBoost multiClassClassifier = new MultiClassAdaBoost();
+multiClassClassifier.fit(trainingData);
+
+ClassifierEvaluator evaluator = new ClassifierEvaluator();
+
+for(int i=0; i < crossValidationData.rowCount(); ++i) {
+ String predicted = multiClassClassifier.classify(crossValidationData.row(i));
+ String actual = crossValidationData.row(i).categoricalTarget();
+ System.out.println("predicted: " + predicted + "\tactual: " + actual);
+ evaluator.evaluate(actual, predicted);
+}
+
+evaluator.report();
+```
+
+To create and train a Bagging ensemble classifier:
 
 ### Anomaly Detection
 
