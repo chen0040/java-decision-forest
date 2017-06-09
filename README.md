@@ -143,6 +143,41 @@ for(int i=0; i < crossValidationData.rowCount(); ++i) {
 evaluator.report();
 ```
 
+### Classification via Ensemble (SAMME)
+
+```java
+InputStream irisStream = new FileInputStream("iris.data");
+DataFrame irisData = DataQuery.csv(",")
+      .from(irisStream)
+      .selectColumn(0).asNumeric().asInput("Sepal Length")
+      .selectColumn(1).asNumeric().asInput("Sepal Width")
+      .selectColumn(2).asNumeric().asInput("Petal Length")
+      .selectColumn(3).asNumeric().asInput("Petal Width")
+      .selectColumn(4).asCategory().asOutput("Iris Type")
+      .build();
+
+TupleTwo<DataFrame, DataFrame> parts = irisData.shuffle().split(0.9);
+
+DataFrame trainingData = parts._1();
+DataFrame crossValidationData = parts._2();
+
+System.out.println(crossValidationData.head(10));
+
+SAMME multiClassClassifier = new SAMME();
+multiClassClassifier.fit(trainingData);
+
+ClassifierEvaluator evaluator = new ClassifierEvaluator();
+
+for(int i=0; i < crossValidationData.rowCount(); ++i) {
+ String predicted = multiClassClassifier.classify(crossValidationData.row(i));
+ String actual = crossValidationData.row(i).categoricalTarget();
+ System.out.println("predicted: " + predicted + "\tactual: " + actual);
+ evaluator.evaluate(actual, predicted);
+}
+
+evaluator.report();
+```
+
 To create and train a Bagging ensemble classifier:
 
 ### Anomaly Detection
